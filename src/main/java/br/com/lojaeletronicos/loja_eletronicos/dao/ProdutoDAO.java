@@ -3,11 +3,11 @@ package br.com.lojaeletronicos.loja_eletronicos.dao;
 import br.com.lojaeletronicos.loja_eletronicos.model.DTO.ProdutoDTO;
 import br.com.lojaeletronicos.loja_eletronicos.model.form.ProdutoForm;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +24,8 @@ public class ProdutoDAO {
         this.conexao = conexao;
     }
 
-    public boolean salvar(ProdutoForm produto) {
+    public boolean salvar(ProdutoForm produto) throws ParseException {
+        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parseObject(produto.getDataEntrada());
         String codigoProduto = UUID.randomUUID().toString();
         try (PreparedStatement pstm = conexao.prepareStatement(
                 "INSERT INTO produto (codigo_produto, nome, descricao, preco, data_entrada, quantidade)" +
@@ -35,7 +36,7 @@ public class ProdutoDAO {
             pstm.setString(2, produto.getNome());
             pstm.setString(3, produto.getDescricao());
             pstm.setBigDecimal(4, produto.getPreco());
-            pstm.setDate(5, produto.getDataEntrada());
+            pstm.setDate(5, date);
             pstm.setInt(2, produto.getQuantidade());
 
             pstm.execute();
@@ -93,12 +94,12 @@ public class ProdutoDAO {
         }
     }
 
-    public boolean atualiza(ProdutoForm produto, String codigoProduto) {
+    public boolean atualiza(ProdutoForm produto, String codigoProduto) throws ParseException {
 
         //UPDATE NOME_TABELA SET NOME = ''',  DESCRICAO =''',
         //PRECO = 0, DATA_ENTRADA = TO_DATE(""), QUANTIDADE = 0
         //WHERE CODIGO_PRODUTO = '';
-
+        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parseObject(produto.getDataEntrada());
         try (PreparedStatement pstm = conexao.prepareStatement(
                 "UPDATE NOME_TABELA SET NOME = ?," +
                         "DESCRICAO = ?, PRECO = ?, DATA_ENTRADA = ?, QUANTIDADE = ?" +
@@ -107,7 +108,7 @@ public class ProdutoDAO {
             pstm.setString(1, produto.getNome());
             pstm.setString(2, produto.getDescricao());
             pstm.setBigDecimal(3, produto.getPreco());
-            pstm.setDate(4, produto.getDataEntrada());
+            pstm.setDate(4, date);
             pstm.setInt(5, produto.getQuantidade());
             pstm.setString(6, codigoProduto);
 

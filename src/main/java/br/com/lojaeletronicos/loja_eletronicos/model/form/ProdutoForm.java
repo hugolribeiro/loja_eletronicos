@@ -9,10 +9,10 @@ public class ProdutoForm {
     private String nome;
     private String descricao;
     private BigDecimal preco;
-    private Date dataEntrada;
+    private String dataEntrada;
     private Integer quantidade;
 
-    public ProdutoForm(String nome, String descricao, BigDecimal preco, Date dataEntrada, Integer quantidade) {
+    public ProdutoForm(String nome, String descricao, BigDecimal preco, String dataEntrada, Integer quantidade) {
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
@@ -44,11 +44,11 @@ public class ProdutoForm {
         this.preco = preco;
     }
 
-    public Date getDataEntrada() {
+    public String getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(Date dataEntrada) {
+    public void setDataEntrada(String dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 
