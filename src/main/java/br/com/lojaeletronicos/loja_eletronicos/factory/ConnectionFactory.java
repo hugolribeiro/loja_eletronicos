@@ -10,8 +10,8 @@ import java.sql.SQLException;
 public class ConnectionFactory {
     public static Connection getConexao() throws SQLException {
         Connection conexao = DriverManager
-                .getConnection("jdbc:mysql://localhost/loja_virtual",
-                        "root", "123456");
+                .getConnection("jdbc:mysql://localhost/loja_virtual?useSSL=false&allowPublicKeyRetrieval=true&useTimezone=true&serverTimezone=GMT&createDatabaseIfNotExist=true",
+                        "root", "12$Padrao");
         return conexao;
     }
 }

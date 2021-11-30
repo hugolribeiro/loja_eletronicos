@@ -36,14 +36,16 @@ public class ProdutoController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateProduto(@RequestParam String codigoProduto, @RequestBody ProdutoForm produtoForm) throws ParseException {
-        ProdutoDAO produtoDAO = new ProdutoDAO();
+    public ResponseEntity<?> updateProduto(@RequestParam String codigoProduto, @RequestBody ProdutoForm produtoForm) throws ParseException, SQLException {
+        Connection connection = ConnectionFactory.getConexao();
+        ProdutoDAO produtoDAO = new ProdutoDAO(connection);
         return new ResponseEntity<>(produtoDAO.atualiza(produtoForm, codigoProduto),HttpStatus.OK);
     }
 
     @DeleteMapping()
     public ResponseEntity<?> deleteproduto(@RequestParam String codigoProduto) throws SQLException {
-        ProdutoDAO produtoDAO = new ProdutoDAO();
+        Connection connection = ConnectionFactory.getConexao();
+        ProdutoDAO produtoDAO = new ProdutoDAO(connection);
         return new ResponseEntity<>(produtoDAO.remover(codigoProduto), HttpStatus.OK);
     }
 

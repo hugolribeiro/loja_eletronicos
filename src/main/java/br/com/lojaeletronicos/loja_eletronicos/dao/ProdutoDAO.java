@@ -25,7 +25,8 @@ public class ProdutoDAO {
     }
 
     public boolean salvar(ProdutoForm produto) throws ParseException {
-        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parseObject(produto.getDataEntrada());
+        java.util.Date date = new SimpleDateFormat("dd/MM/yyyy").parse(produto.getDataEntrada());
+        Date dateSql = new Date(date.getYear(), date.getMonth(), date.getDay());
         String codigoProduto = UUID.randomUUID().toString();
         try (PreparedStatement pstm = conexao.prepareStatement(
                 "INSERT INTO produto (codigo_produto, nome, descricao, preco, data_entrada, quantidade)" +
@@ -36,8 +37,8 @@ public class ProdutoDAO {
             pstm.setString(2, produto.getNome());
             pstm.setString(3, produto.getDescricao());
             pstm.setBigDecimal(4, produto.getPreco());
-            pstm.setDate(5, date);
-            pstm.setInt(2, produto.getQuantidade());
+            pstm.setDate(5, dateSql);
+            pstm.setInt(6, produto.getQuantidade());
 
             pstm.execute();
 
@@ -82,7 +83,7 @@ public class ProdutoDAO {
     public boolean remover(String codigoProduto) throws SQLException {
 
         try (PreparedStatement pstm = conexao.prepareStatement(
-                "DELETE FROM PRODUTO WHERE ID > ?")) {
+                "DELETE FROM PRODUTO WHERE codigo_produto > ?")) {
 
             pstm.setString(1, codigoProduto);
 
@@ -99,16 +100,15 @@ public class ProdutoDAO {
         //UPDATE NOME_TABELA SET NOME = ''',  DESCRICAO =''',
         //PRECO = 0, DATA_ENTRADA = TO_DATE(""), QUANTIDADE = 0
         //WHERE CODIGO_PRODUTO = '';
-        Date date = (Date) new SimpleDateFormat("dd/MM/yyyy").parseObject(produto.getDataEntrada());
+        java.util.Date date = new SimpleDateFormat("dd/MM/yyyy").parse(produto.getDataEntrada());
+        Date dateSql = new Date(date.getYear(), date.getMonth(), date.getDay());
         try (PreparedStatement pstm = conexao.prepareStatement(
-                "UPDATE NOME_TABELA SET NOME = ?," +
-                        "DESCRICAO = ?, PRECO = ?, DATA_ENTRADA = ?, QUANTIDADE = ?" +
-                        "WHERE CODIGO_PRODUTO = ?")) {
+                "UPDATE produto SET NOME = ?, DESCRICAO = ?, PRECO = ?, DATA_ENTRADA = ?, QUANTIDADE = ? WHERE codigo_produto = ?")) {
 
             pstm.setString(1, produto.getNome());
             pstm.setString(2, produto.getDescricao());
             pstm.setBigDecimal(3, produto.getPreco());
-            pstm.setDate(4, date);
+            pstm.setDate(4, dateSql);
             pstm.setInt(5, produto.getQuantidade());
             pstm.setString(6, codigoProduto);
 
